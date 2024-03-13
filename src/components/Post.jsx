@@ -69,16 +69,17 @@ export default function Post({ selectedArticle }) {
                             <span className='text-sm md:text-md lg:text-lg'>{selectedArticle.article_responsible}</span>
                         </li>
                     </ul>
+                    <div className='flex-col gap-2 my-5 w-full'>
+                        <div className='w-full'>
+                            <Button onClick={startEditing}>Редактировать</Button>
+                        </div>
+                        <div className='w-full'>
+                            <Button>Удалить</Button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className='md:flex flex-none justify-between gap-2 my-2 w-full'>
-                <div className='w-full'>
-                    <Button onClick={startEditing}>Редактировать</Button>
-                </div>
-                <div className='w-full'>
-                    <Button>Удалить</Button>
-                </div>
-            </div>
+            {/* Кнопка редактировать и удалить */}
             <div>
                 {/* Если статус выполнено: то показывает отчёт */}
                 {selectedArticle.article_status === 'Выполнено' && <Report selectedArticle={selectedArticle} />}
