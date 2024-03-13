@@ -3,10 +3,14 @@ import imageSvg from '../../images/image_icon.svg'; // Импорт изобра
 
 export default function Input({ children, type, disabled, initialValue, placeholder, isRequired }) {
     const [value, setValue] = useState(initialValue);
+    const [fileName, setFileName] = useState('');
 
     const handleChange = (event) => {
         const inputValue = event.target.value;
         setValue(inputValue);
+        if (event.target.files && event.target.files.length > 0) {
+            setFileName(event.target.files[0].name);
+        }
     };
 
     return (
@@ -19,7 +23,7 @@ export default function Input({ children, type, disabled, initialValue, placehol
                 <div>
                     <label htmlFor={type === 'file' ? 'fileInput' : 'imageInput'} className='w-full py-2 px-2 my-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none flex items-center cursor-pointer'>
                         <img src={type === 'image' ? imageSvg : imageSvg} className='w-6 h-6 mr-2' alt='Image' /> 
-                        <span className='text-gray-600'>{type === 'file' ? 'Выберите файл' : 'Добавьте фото'}</span>
+                        <span className='text-gray-600'>{fileName || (type === 'file' ? 'Выберите файл' : 'Добавьте фото')}</span>
                         <input type='file' id={type === 'file' ? 'fileInput' : 'imageInput'} accept={type === 'image' ? 'image/*' : ''} className='hidden' onChange={handleChange} disabled={disabled} />
                     </label>
                 </div>

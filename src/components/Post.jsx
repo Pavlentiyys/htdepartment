@@ -6,23 +6,40 @@ import Report from './Report.jsx';
 import Button from './button/Button.jsx';
 import checkSvgPrimary from '../images/check_icon_primary.svg';
 import checkSvgNormal from '../images/check_icon_normal.svg';
+import Dropdown from './choice/Choice.jsx';
 import EditPost from './EditPost';
 
 export default function Post({ selectedArticle }) {
     const [isEditing, setIsEditing] = useState(false);
+    const [isExtending, setIsExtending] = useState(false);
+    const [isSelectingDepartment, setIsSelectingDepartment] = useState(false);
 
-    // Функция для открытия модального окна и начала редактирования
     const startEditing = () => {
         setIsEditing(true);
     };
-
-    // Функция для закрытия модального окна и завершения редактирования
+    
     const stopEditing = () => {
         setIsEditing(false);
     };
 
+    const startExtending = () => {
+        setIsExtending(true);
+    };
+
+    const stopExtending = () => {
+        setIsExtending(false);
+    };
+    const startSelectingDepartment = () => {
+        setIsSelectingDepartment(true);
+    };
+
+    const stopSelectingDepartment = () => {
+        setIsSelectingDepartment(false);
+    };
+
     return (
         <main className='container mx-auto p-5'>
+            {/* Пост с обращением */}
             <div className='flex-none lg:flex gap-10'>
                 <img src={selectedArticle.article_image} className='rounded-xl my-2 w-full lg:w-1/2' alt="image" />
                 <div className='p-2'>
@@ -56,7 +73,6 @@ export default function Post({ selectedArticle }) {
             </div>
             <div className='md:flex flex-none justify-between gap-2 my-2 w-full'>
                 <div className='w-full'>
-                    {/* Кнопка "Редактировать" с функцией открытия модального окна */}
                     <Button onClick={startEditing}>Редактировать</Button>
                 </div>
                 <div className='w-full'>
@@ -81,12 +97,31 @@ export default function Post({ selectedArticle }) {
                                 <Button color="Primary">Начать выполнение</Button>
                             </div>
                             <div className='w-full lg:w-1/3'>
-                                <Button>Другой отдел</Button>
+                                <Button onClick={startSelectingDepartment}>Другой отдел</Button>
                             </div>
                         </div>
                     </section>
                 )}
-                {/* Если статус в работе */}
+                {/* Модальное окно для выбора другого отдела */}
+                {isSelectingDepartment && (
+                    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white p-4 md:p-8 rounded-lg w-96 md:w-2/3 max-w-lg">
+                            <h2 className="text-lg md:text-xl font-semibold mb-4">Выберите другой отдел</h2>
+                            <Dropdown>Отдел</Dropdown>
+                            <div className="flex-none md:flex justify-end gap-3 mt-4">
+                                <div className='w-full'>
+                                    <Button color="Primary" onClick={stopSelectingDepartment}>Выбрать</Button>
+                                </div>
+                                <div className='w-full'>
+                                    <Button onClick={stopSelectingDepartment}>Отмена</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+               
+
+                {/* Если статус в работе выдаёт информацию о прохождении работы*/}
                 {selectedArticle.article_status === 'В работе' && (
                     <section>
                         <div>
@@ -104,19 +139,42 @@ export default function Post({ selectedArticle }) {
                                     <Button color="Primary" icon={checkSvgPrimary}>Выполнить</Button>
                                 </div>
                                 <div className='w-full lg:w-1/3'>
-                                    <Button>Продлить</Button>
+                                    <Button onClick={startExtending}>Продлить</Button>
                                 </div>
                             </div>
                         </div>
                     </section>
+                    
                 )}
+                <section>
+                {/* Модальное окно продления работы*/}
+                {isExtending && (
+                            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+                                <div className="bg-white p-4 md:p-8 rounded-lg w-96 md:w-2/3 max-w-lg">
+                                <h2 className="text-lg md:text-xl font-semibold mb-4">Продлить</h2>
+                                <input
+                                    type="date"
+                                    className="border border-gray-300 px-4 py-2 rounded-lg w-full"
+                                />
+                                <div className="flex:none md:flex justify-end gap-3 mt-4">
+                                    <div className='w-full'>
+                                        <Button onClick={stopExtending}>Отмена</Button>
+                                    </div>
+                                    <div className='w-full'>
+                                        <Button color="Primary" onClick={stopExtending}>Продлить</Button>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        )}
+                </section>
             </div>
 
             {/* Модальное окно для редактирования */}
             {isEditing && (
                 <div >
                     <EditPost stopEditing={stopEditing} />
-                    {/* Импорт и использование компонента EditPost */}
+                   
                 </div>
             )}
         </main>
